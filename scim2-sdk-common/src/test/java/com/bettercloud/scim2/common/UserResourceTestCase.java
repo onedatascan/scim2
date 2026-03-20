@@ -18,6 +18,7 @@
 package com.bettercloud.scim2.common;
 
 import com.bettercloud.scim2.common.types.EnterpriseUserExtension;
+import com.bettercloud.scim2.common.types.MultiFactorAuthentication;
 import com.bettercloud.scim2.common.types.UserResource;
 import com.bettercloud.scim2.common.utils.JsonUtils;
 import org.testng.Assert;
@@ -25,6 +26,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -322,6 +324,33 @@ public class UserResourceTestCase
     UserResource userResource2 = JsonUtils.nodeToValue(gsr.getObjectNode(),
         UserResource.class);
     Assert.assertEquals(userResource1, userResource2);
+  }
+
+  /**
+   * Test that multiFactorAuthentications round-trips correctly on UserResource.
+   *
+   * @throws Exception if an error occurs.
+   */
+  @Test
+  public void testMultiFactorAuthenticationsRoundTrip() throws Exception
+  {
+    MultiFactorAuthentication mfa = new MultiFactorAuthentication()
+        .setMultiFactorAuthenticationType(
+            MultiFactorAuthentication.MultiFactorAuthenticationType.SMS)
+        .setMultiFactorAuthenticationValue("+1-555-555-0123");
+
+    UserResource user = new UserResource()
+        .setUserName("testuser@example.com")
+        .setMultiFactorAuthentications(Collections.singletonList(mfa));
+
+    String json = JsonUtils.getObjectWriter().writeValueAsString(user);
+
+    UserResource deserialized = JsonUtils.getObjectReader()
+        .forType(UserResource.class).readValue(json);
+
+    assertNotNull(deserialized.getMultiFactorAuthentications());
+    assertEquals(deserialized.getMultiFactorAuthentications().size(), 1);
+    assertEquals(deserialized.getMultiFactorAuthentications().getFirst(), mfa);
   }
 
 }
