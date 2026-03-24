@@ -223,6 +223,14 @@ public class UserResource extends BaseScimResource
       multiValueClass = X509Certificate.class)
   private List<X509Certificate> x509Certificates;
 
+  @Attribute(description = "A list of multi-factor authentication methods " +
+      "for the User.",
+      mutability = AttributeDefinition.Mutability.READ_WRITE,
+      returned = AttributeDefinition.Returned.DEFAULT,
+      uniqueness = AttributeDefinition.Uniqueness.NONE,
+      multiValueClass = MultiFactorAuthentication.class)
+  private List<MultiFactorAuthentication> multiFactorAuthentications;
+
   /**
    * Retrieves the unique identifier for the User typically used by the user
    * to directly authenticate to the service provider.
@@ -719,6 +727,30 @@ public class UserResource extends BaseScimResource
   }
 
   /**
+   * Retrieves the multi-factor authentication methods for the User.
+   *
+   * @return The multi-factor authentication methods for the User.
+   */
+  public List<MultiFactorAuthentication> getMultiFactorAuthentications()
+  {
+    return multiFactorAuthentications;
+  }
+
+  /**
+   * Specifies the multi-factor authentication methods for the User.
+   *
+   * @param multiFactorAuthentications The multi-factor authentication methods
+   *                                   for the User.
+   * @return This object.
+   */
+  public UserResource setMultiFactorAuthentications(
+      final List<MultiFactorAuthentication> multiFactorAuthentications)
+  {
+    this.multiFactorAuthentications = multiFactorAuthentications;
+    return this;
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -831,7 +863,10 @@ public class UserResource extends BaseScimResource
       return false;
     }
     return !(x509Certificates != null ? !x509Certificates.equals(
-        that.x509Certificates) : that.x509Certificates != null);
+        that.x509Certificates) : that.x509Certificates != null) &&
+        !(multiFactorAuthentications != null ?
+            !multiFactorAuthentications.equals(that.multiFactorAuthentications) :
+            that.multiFactorAuthentications != null);
 
   }
 
@@ -865,6 +900,8 @@ public class UserResource extends BaseScimResource
     result = 31 * result + (roles != null ? roles.hashCode() : 0);
     result = 31 * result + (x509Certificates != null ?
         x509Certificates.hashCode() : 0);
+    result = 31 * result + (multiFactorAuthentications != null ?
+        multiFactorAuthentications.hashCode() : 0);
     return result;
   }
 }
