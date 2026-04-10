@@ -21,13 +21,6 @@ public class MultiFactorAuthentication implements Serializable
     SMS
   }
 
-  @Attribute(description = "The multi-factor authentication type(MFA) for the User; e.g., 'SMS'",
-      canonicalValues = { "SMS" },
-      mutability = AttributeDefinition.Mutability.READ_WRITE,
-      returned = AttributeDefinition.Returned.DEFAULT,
-      uniqueness = AttributeDefinition.Uniqueness.NONE)
-  private MultiFactorAuthenticationType multiFactorAuthenticationType;
-
   @Attribute(description = "The value associated with the multi-factor authentication type(MFA);"
       + " for example, a phone number in E.164 format (e.g., +11234567890) for SMS type MFA.",
       isRequired = true,
@@ -35,29 +28,36 @@ public class MultiFactorAuthentication implements Serializable
       mutability = AttributeDefinition.Mutability.READ_WRITE,
       returned = AttributeDefinition.Returned.DEFAULT,
       uniqueness = AttributeDefinition.Uniqueness.NONE)
-  private String multiFactorAuthenticationValue;
+  private String value;
+
+  @Attribute(description = "The multi-factor authentication type(MFA) for the User; e.g., 'SMS'",
+      canonicalValues = {"SMS"},
+      mutability = AttributeDefinition.Mutability.READ_WRITE,
+      returned = AttributeDefinition.Returned.DEFAULT,
+      uniqueness = AttributeDefinition.Uniqueness.NONE)
+  private MultiFactorAuthenticationType type;
 
   /**
    * Retrieves the multi-factor authentication channel type.
    *
    * @return The multi-factor authentication channel type.
    */
-  public MultiFactorAuthenticationType getMultiFactorAuthenticationType()
+  public MultiFactorAuthenticationType getType()
   {
-    return multiFactorAuthenticationType;
+    return type;
   }
 
   /**
    * Specifies the multi-factor authentication channel type.
    *
-   * @param multiFactorAuthenticationType The multi-factor authentication
+   * @param type The multi-factor authentication
    *                                      channel type.
    * @return This object.
    */
-  public MultiFactorAuthentication setMultiFactorAuthenticationType(
-      final MultiFactorAuthenticationType multiFactorAuthenticationType)
+  public MultiFactorAuthentication setType(
+      final MultiFactorAuthenticationType type)
   {
-    this.multiFactorAuthenticationType = multiFactorAuthenticationType;
+    this.type = type;
     return this;
   }
 
@@ -66,22 +66,22 @@ public class MultiFactorAuthentication implements Serializable
    *
    * @return The multi-factor authentication value.
    */
-  public String getMultiFactorAuthenticationValue()
+  public String getValue()
   {
-    return multiFactorAuthenticationValue;
+    return value;
   }
 
   /**
    * Specifies the value associated with the multi-factor authentication type.
    *
-   * @param multiFactorAuthenticationValue The multi-factor authentication
+   * @param value The multi-factor authentication
    *                                       value.
    * @return This object.
    */
-  public MultiFactorAuthentication setMultiFactorAuthenticationValue(
-      final String multiFactorAuthenticationValue)
+  public MultiFactorAuthentication setValue(
+      final String value)
   {
-    this.multiFactorAuthenticationValue = multiFactorAuthenticationValue;
+    this.value = value;
     return this;
   }
 
@@ -95,7 +95,7 @@ public class MultiFactorAuthentication implements Serializable
     if (o == null || getClass() != o.getClass())
       return false;
     final MultiFactorAuthentication that = (MultiFactorAuthentication) o;
-    return multiFactorAuthenticationType == that.multiFactorAuthenticationType && Objects.equals(multiFactorAuthenticationValue, that.multiFactorAuthenticationValue);
+    return type == that.type && Objects.equals(value, that.value);
   }
 
   /**
@@ -104,10 +104,10 @@ public class MultiFactorAuthentication implements Serializable
   @Override
   public int hashCode()
   {
-    int result = multiFactorAuthenticationType != null ?
-        multiFactorAuthenticationType.hashCode() : 0;
-    result = 31 * result + (multiFactorAuthenticationValue != null ?
-        multiFactorAuthenticationValue.hashCode() : 0);
+    int result = type != null ?
+        type.hashCode() : 0;
+    result = 31 * result + (value != null ?
+        value.hashCode() : 0);
     return result;
   }
 }

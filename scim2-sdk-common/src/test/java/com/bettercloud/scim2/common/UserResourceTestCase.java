@@ -335,9 +335,9 @@ public class UserResourceTestCase
   public void testMultiFactorAuthenticationsRoundTrip() throws Exception
   {
     MultiFactorAuthentication mfa = new MultiFactorAuthentication()
-        .setMultiFactorAuthenticationType(
+        .setType(
             MultiFactorAuthentication.MultiFactorAuthenticationType.SMS)
-        .setMultiFactorAuthenticationValue("+1-555-555-0123");
+        .setValue("+1-555-555-0123");
 
     UserResource user = new UserResource()
         .setUserName("testuser@example.com")
